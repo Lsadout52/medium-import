@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2022-05-21T17:41:41.915Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Getting Started with Cloud IAM</h1>
+                </div>
+
+                <h2>Introduction</h2>
+                <p class="pw-post-body-paragraph">
+                    <strong>Google Cloud IAM (Identity and Access Management)</strong> is a security tool that controls who can access 
+                    what within Google Cloud resources. It enables organizations to manage permissions centrally, 
+                    ensuring that the right people have the right level of access.
+                </p>
+                <p class="pw-post-body-paragraph">
+                    Instead of using separate credentials for each service, IAM provides a **unified authentication system** 
+                    with **role-based access control (RBAC)** for managing permissions across Google Cloud.
+                </p>
+
+                <h2>Key Features of Cloud IAM</h2>
+                <ul>
+                    <li><strong>Role-Based Access Control (RBAC)</strong> – Uses predefined roles (Viewer, Editor, Owner) and custom roles to grant granular permissions at project, folder, or organization levels.</li>
+                    <li><strong>Fine-Grained Security Policies</strong> – Assign permissions to users, groups, or service accounts, restricting their access to specific services or actions.</li>
+                    <li><strong>Multi-Layered Authentication</strong> – Supports Multi-Factor Authentication (MFA) for extra security and integrates with Google Workspace for seamless access.</li>
+                    <li><strong>Audit Logging & Compliance</strong> – Provides detailed logs in Cloud Logging to track changes and ensure regulatory compliance.</li>
+                </ul>
+
+                <h2>Getting Started with Cloud IAM</h2>
+
+                <h3>Step 1: Granting IAM Roles via Console</h3>
+                <p class="pw-post-body-paragraph">
+                    - Open **Google Cloud Console** and navigate to **IAM & Admin > IAM**.
+                    <br>- Select a **project or organization**.
+                    <br>- Click **Add Member** and enter the user’s email.
+                    <br>- Choose a **role** (e.g., Viewer, Editor, Owner).
+                    <br>- Click **Save** to apply the changes.
+                </p>
+
+                <h3>Step 2: Assigning IAM Roles via gcloud CLI</h3>
+                <p class="pw-post-body-paragraph">
+                    To grant a role to a user, use:
+                </p>
+                <pre>
+gcloud projects add-iam-policy-binding my-project \
+  --member="user:example@gmail.com" \
+  --role="roles/editor"
+                </pre>
+
+                <p class="pw-post-body-paragraph">
+                    To remove a role:
+                </p>
+                <pre>
+gcloud projects remove-iam-policy-binding my-project \
+  --member="user:example@gmail.com" \
+  --role="roles/editor"
+                </pre>
+
+                <h3>Step 3: Viewing IAM Policies</h3>
+                <p class="pw-post-body-paragraph">
+                    Check the current IAM settings using:
+                </p>
+                <pre>
+gcloud projects get-iam-policy my-project
+                </pre>
+
+                <h2>Common Use Cases for Cloud IAM</h2>
+                <ul>
+                    <li>✅ **Restricting access** to sensitive cloud resources.</li>
+                    <li>✅ **Managing service accounts** for automated workflows.</li>
+                    <li>✅ **Enforcing least privilege policies** to improve security.</li>
+                </ul>
+
+                <h2>Final Thoughts</h2>
+                <p class="pw-post-body-paragraph">
+                    <strong>Google Cloud IAM</strong> is essential for managing permissions efficiently. By setting up 
+                    **role-based access control**, you can secure your cloud environment while ensuring that 
+                    the right users have access to the right resources.
+                </p>
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
