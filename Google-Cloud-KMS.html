@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2020-04-05T17:41:41.915Z" />
+    <title>Introduction to Google Cloud KMS</title>
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Introduction to Google Cloud KMS</h1>
+                </div>
+                <p class="pw-post-body-paragraph">
+                    Google Cloud Key Management Service (KMS) is a fully managed encryption service that allows you to
+                    create, manage, and use cryptographic keys for protecting sensitive data. It provides centralized
+                    control over encryption keys and integrates seamlessly with other Google Cloud services.
+                </p>
+                <p class="pw-post-body-paragraph">
+                    Instead of managing your own encryption infrastructure, Cloud KMS automates key storage, rotation,
+                    and access policies, ensuring secure and compliant data protection.
+                </p>
+
+                <h2>Key Features of Cloud KMS</h2>
+                <ul>
+                    <li><strong>Centralized Key Management</strong>: Manage symmetric and asymmetric encryption keys, 
+                    support for AES-256, RSA, and EC cryptographic algorithms, and store multiple key versions.</li>
+                    <li><strong>Cloud-Native Integration</strong>: Encrypt/decrypt data stored in Cloud Storage, BigQuery,
+                    Compute Engine, and Databases.</li>
+                    <li><strong>Role-Based Access Control (RBAC)</strong>: Uses IAM roles to restrict access to keys.</li>
+                    <li><strong>Automatic Key Rotation & Expiry</strong>: Enables periodic key rotation without manual intervention.</li>
+                    <li><strong>Audit Logging & Compliance</strong>: Cloud Audit Logs track key usage and access history.</li>
+                </ul>
+
+                <h2>Getting Started with Cloud KMS</h2>
+                <h3>Step 1: Creating a Key Ring and a Key</h3>
+                <p>A Key Ring is a container that holds encryption keys.</p>
+                <p><strong>Using Google Cloud Console:</strong></p>
+                <ol>
+                    <li>Open Google Cloud Console.</li>
+                    <li>Navigate to Security &gt; Cloud KMS.</li>
+                    <li>Click <strong>Create Key Ring</strong> and provide a name.</li>
+                    <li>Click <strong>Create Key</strong>, choose a key type and encryption algorithm.</li>
+                </ol>
+
+                <p><strong>Using gcloud CLI:</strong></p>
+                <pre>
+gcloud kms keyrings create my-key-ring --location global
+gcloud kms keys create my-key \ 
+  --location global \ 
+  --keyring my-key-ring \ 
+  --purpose encryption
+                </pre>
+
+                <h3>Step 2: Encrypting and Decrypting Data</h3>
+                <p><strong>Encrypt a file:</strong></p>
+                <pre>
+gcloud kms encrypt \ 
+  --location global \ 
+  --keyring my-key-ring \ 
+  --key my-key \ 
+  --plaintext-file myfile.txt \ 
+  --ciphertext-file myfile.enc
+                </pre>
+                <p><strong>Decrypt a file:</strong></p>
+                <pre>
+gcloud kms decrypt \ 
+  --location global \ 
+  --keyring my-key-ring \ 
+  --key my-key \ 
+  --ciphertext-file myfile.enc \ 
+  --plaintext-file myfile_decrypted.txt
+                </pre>
+
+                <h3>Step 3: Managing Key Permissions</h3>
+                <p>To grant a user access to a key:</p>
+                <pre>
+gcloud kms keys add-iam-policy-binding my-key \ 
+  --location global \ 
+  --keyring my-key-ring \ 
+  --member user:example@gmail.com \ 
+  --role roles/cloudkms.cryptoKeyEncrypterDecrypter
+                </pre>
+                <p>To view key policies:</p>
+                <pre>
+gcloud kms keys get-iam-policy my-key --location global --keyring my-key-ring
+                </pre>
+
+                <h2>Common Use Cases for Cloud KMS</h2>
+                <ul>
+                    <li>Encrypting sensitive data in Cloud Storage, BigQuery, and Compute Engine.</li>
+                    <li>Managing encryption keys for databases and cloud applications.</li>
+                    <li>Automating key rotation to enhance security and compliance.</li>
+                    <li>Integrating HSM-backed keys for higher security.</li>
+                </ul>
+
+                <h2>Final Thoughts</h2>
+                <p>
+                    Google Cloud KMS simplifies encryption key management, allowing organizations to secure their cloud
+                    data easily. With automatic key rotation, IAM-based access control, and audit logging, Cloud KMS
+                    ensures strong security while maintaining compliance with industry regulations.
+                </p>
+                <p>
+                    For more details, check out the <a href="https://cloud.google.com/kms/docs">Google Cloud KMS documentation</a>. 🚀
+                </p>
+            </section>
+        </article>
+    </main>
+</body>
+</html>
