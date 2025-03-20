@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2023-07-06T17:41:41.915Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Introduction to Google Cloud Functions</h1>
+                </div>
+
+                <h2>What is Google Cloud Functions?</h2>
+                <p class="pw-post-body-paragraph">
+                    <strong>Google Cloud Functions</strong> is a **serverless computing service** that lets developers run 
+                    **event-driven code** without managing infrastructure. It automatically scales based on demand 
+                    and only runs when triggered, making it a cost-effective solution for many applications.
+                </p>
+                <p class="pw-post-body-paragraph">
+                    Common use cases include **processing data, automating workflows, and integrating with APIs**.
+                </p>
+
+                <h2>Key Features of Cloud Functions</h2>
+                <ul>
+                    <li><strong>Event-Driven Execution</strong> – Cloud Functions trigger automatically from:
+                        <ul>
+                            <li>✅ **HTTP Requests**</li>
+                            <li>✅ **Pub/Sub Messages**</li>
+                            <li>✅ **Cloud Storage Events**</li>
+                            <li>✅ **Firestore & Firebase Triggers**</li>
+                        </ul>
+                    </li>
+                    <li><strong>No Server Management</strong> – Google handles the infrastructure, allowing developers to focus on writing code.</li>
+                    <li><strong>Built-in Security & Monitoring</strong> – Integrated with **IAM for role-based access control**, plus **Cloud Logging and Cloud Trace** for monitoring.</li>
+                    <li><strong>Multiple Runtimes Supported</strong> – Supports **Node.js, Python, Go, Java, .NET, Ruby, and PHP**.</li>
+                </ul>
+
+                <h2>Getting Started with Cloud Functions</h2>
+
+                <h3>Step 1: Creating a Cloud Function via Console</h3>
+                <p class="pw-post-body-paragraph">
+                    - Open **Google Cloud Console**.
+                    <br>- Navigate to **Cloud Functions** and click **Create Function**.
+                    <br>- Choose an **execution environment** (e.g., Node.js, Python).
+                    <br>- Select a **trigger type** (HTTP, Pub/Sub, Cloud Storage).
+                    <br>- Deploy your function.
+                </p>
+
+                <h3>Step 2: Deploying a Cloud Function via gcloud CLI</h3>
+                <p class="pw-post-body-paragraph">
+                    To deploy a simple HTTP function using the command line:
+                </p>
+                <pre>
+gcloud functions deploy myFunction \
+  --runtime python39 \
+  --trigger-http \
+  --allow-unauthenticated
+                </pre>
+
+                <h3>Step 3: Writing a Basic Cloud Function</h3>
+                <p class="pw-post-body-paragraph">
+                    Example function in Python that returns **"Hello, World!"**:
+                </p>
+                <pre>
+def hello_world(request):
+    return "Hello, World!"
+                </pre>
+
+                <h2>Common Use Cases for Cloud Functions</h2>
+                <ul>
+                    <li>✅ **Automating tasks** (e.g., image processing, notifications).</li>
+                    <li>✅ **Serverless API backends** for lightweight applications.</li>
+                    <li>✅ **Integrating Google Cloud services** (e.g., Cloud Storage triggers).</li>
+                </ul>
+
+                <h2>Final Thoughts</h2>
+                <p class="pw-post-body-paragraph">
+                    <strong>Google Cloud Functions</strong> makes it easy to build **scalable, event-driven applications** 
+                    without managing servers. Whether you're handling **data processing, automation, or APIs**, 
+                    Cloud Functions help streamline cloud-based workflows.
+                </p>
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
