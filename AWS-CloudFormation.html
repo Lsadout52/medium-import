@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta property="article:published_time" content="2022-02-13T17:41:41.915Z" />
+</head>
+
+<body>
+  <main>
+    <article>
+      <section>
+        <div class="pw-post-title">
+          <h1>Getting Started with AWS CloudFormation</h1>
+        </div>
+
+        <p class="pw-post-body-paragraph">
+          AWS CloudFormation is an Infrastructure as Code (IaC) service that allows you to provision and manage AWS resources using templates. Instead of manually configuring services, you can define everything in JSON or YAML files and deploy them consistently.
+        </p>
+        <p class="pw-post-body-paragraph">
+          With CloudFormation, you can automate deployments, manage resources as a single unit, and rollback changes if something goes wrong.
+        </p>
+
+        <h2>Why Use CloudFormation?</h2>
+        <ul>
+          <li>✅ Automates infrastructure deployment—no need for manual setup.</li>
+          <li>✅ Ensures consistency—same configuration across all environments.</li>
+          <li>✅ Supports version control—easily track and update infrastructure.</li>
+          <li>✅ Rollback capabilities—revert changes if an update fails.</li>
+        </ul>
+
+        <h2>Step 1: Create a CloudFormation Template</h2>
+        <p>Save the following YAML file as <code>ec2-template.yaml</code>:</p>
+<pre><code>AWSTemplateFormatVersion: "2010-09-09"
+Description: Create an EC2 instance
+Resources:
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-0abcdef1234567890" # Replace with a valid AMI ID
+      InstanceType: "t2.micro"
+      Tags:
+        - Key: "Name"
+          Value: "MyCloudFormationEC2"</code></pre>
+
+        <h2>Step 2: Deploy the Template Using AWS Console</h2>
+        <ul>
+          <li>Go to AWS CloudFormation Console.</li>
+          <li>Click <strong>Create stack → With new resources</strong>.</li>
+          <li>Upload your <code>ec2-template.yaml</code> file.</li>
+          <li>Provide a stack name (e.g., <code>MyEC2Stack</code>).</li>
+          <li>Review and click <strong>Create stack</strong>.</li>
+        </ul>
+        <p>✅ Wait for <code>CREATE_COMPLETE</code>—your EC2 instance is now live! 🎉</p>
+
+        <h2>Step 3: Deploy the Template Using AWS CLI</h2>
+        <pre><code>aws cloudformation create-stack --stack-name MyEC2Stack --template-body file://ec2-template.yaml</code></pre>
+        <p>Check the status:</p>
+        <pre><code>aws cloudformation describe-stacks --stack-name MyEC2Stack</code></pre>
+        <p>Delete the stack and all resources:</p>
+        <pre><code>aws cloudformation delete-stack --stack-name MyEC2Stack</code></pre>
+
+        <h2>Best Practices for CloudFormation</h2>
+        <ul>
+          <li>✅ Use parameters to make templates reusable.</li>
+          <li>✅ Enable rollback to prevent failed deployments.</li>
+          <li>✅ Store templates in version control for tracking changes.</li>
+          <li>✅ Use AWS CloudFormation StackSets for multi-region deployments.</li>
+        </ul>
+
+        <h2>Now, If I'm Using Terraform, Can I Reuse My CloudFormation Template?</h2>
+        <p>
+          If you're already using Terraform, you might wonder whether you can reuse your existing CloudFormation templates. The good news is: you don’t have to start from scratch!
+        </p>
+        <p>You can convert CloudFormation templates to Terraform using tools like <strong>cf2tf</strong> (CloudFormation to Terraform), or by manually translating YAML to HCL.</p>
+
+        <p><strong>Steps to Convert CloudFormation to Terraform:</strong></p>
+        <ul>
+          <li>Use an online converter or tool like <code>cf2tf</code> to generate Terraform code.</li>
+          <li>Verify all AWS resources are correctly mapped.</li>
+          <li>Adjust Terraform-specific configs (e.g., backend, providers).</li>
+          <li>Test deployments in a sandbox before production.</li>
+        </ul>
+        <p>⚠️ Remember: Terraform supports multi-cloud, while CloudFormation is AWS-specific—consider this if you're planning long-term cross-platform deployments.</p>
+
+        <h2>Final Thoughts</h2>
+        <p>
+          AWS CloudFormation simplifies infrastructure management by allowing you to define resources as code. Whether you’re automating deployments, ensuring consistency, or managing updates, CloudFormation is a powerful tool for scaling AWS environments efficiently.
+        </p>
+        <p>🚀 <strong>Next Steps:</strong> Explore parameters, nested stacks, and drift detection for advanced configurations!</p>
+
+      </section>
+    </article>
+  </main>
+</body>
+
+</html>
