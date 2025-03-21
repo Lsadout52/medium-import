@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2021-03-02T17:41:41.915Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Connect EC2 without SSH using AWS Session Manager</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    Amazon EC2 instances are traditionally accessed via SSH or RDP, which requires key management and open ports—introducing security risks. 
+                    <strong>AWS Systems Manager (SSM) Session Manager</strong> offers a secure, agent-based alternative that eliminates SSH, RDP, and public IP dependencies.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    With Session Manager, you can establish a secure, auditable session directly from the AWS Console or CLI, improving both security and ease of management.
+                </p>
+
+                <h2>✅ Prerequisites</h2>
+                <ul>
+                    <li>EC2 instance (Amazon Linux, Ubuntu, or Windows) with <strong>SSM Agent</strong> installed.</li>
+                    <li><strong>IAM Role</strong> with <code>AmazonSSMManagedInstanceCore</code> policy attached.</li>
+                    <li>Outbound <strong>HTTPS access (port 443)</strong> for SSM communication.</li>
+                </ul>
+
+                <h2>Step 1: Attach an IAM Role to Your EC2 Instance</h2>
+                <p class="pw-post-body-paragraph">
+                    - Go to <strong>AWS IAM Console → Roles → Create role</strong><br>
+                    - Select <strong>AWS Service → EC2</strong> and attach <code>AmazonSSMManagedInstanceCore</code><br>
+                    - Name the role (e.g., <code>SSM-EC2-Access</code>) and attach it to your EC2 instance
+                </p>
+
+                <h2>Step 2: Enable Systems Manager Agent (SSM Agent)</h2>
+                <p class="pw-post-body-paragraph">
+                    Most Amazon Linux and Ubuntu AMIs come with SSM Agent pre-installed. Check if it's running:
+                </p>
+                <pre>
+sudo systemctl status amazon-ssm-agent
+                </pre>
+                <p class="pw-post-body-paragraph">
+                    If not installed:
+                </p>
+                <pre>
+sudo yum install -y amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+                </pre>
+
+                <h2>Step 3: Connect to EC2 via AWS Session Manager</h2>
+                <h3>Option 1: AWS Console</h3>
+                <p class="pw-post-body-paragraph">
+                    - Go to <strong>AWS Systems Manager → Session Manager</strong><br>
+                    - Click <strong>Start session</strong> and select your EC2 instance<br>
+                    - Click <strong>Start session</strong> to launch the browser-based terminal
+                </p>
+
+                <h3>Option 2: AWS CLI</h3>
+                <pre>
+aws ssm start-session --target i-xxxxxxxxxxxxxxxxx
+                </pre>
+                <p class="pw-post-body-paragraph">
+                    This command opens a secure, SSH-free terminal session with your EC2 instance.
+                </p>
+
+                <h2>Why Use AWS SSM Instead of SSH?</h2>
+                <ul>
+                    <li>✅ No open ports or SSH keys—minimizes attack surfaces</li>
+                    <li>✅ <strong>Auditable sessions</strong>—logs stored in AWS CloudTrail and optionally in S3</li>
+                    <li>✅ <strong>Works with private instances</strong>—no public IP required</li>
+                </ul>
+
+                <h2>Final Thoughts</h2>
+                <p class="pw-post-body-paragraph">
+                    <strong>AWS Systems Manager Session Manager</strong> provides a more secure and scalable way to access EC2 instances without the overhead of SSH configuration.
+                    Now that you're set up, you can begin exploring **SSM Automation** to run commands on multiple EC2 instances at scale! 🚀
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
