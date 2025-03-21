@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta property="article:published_time" content="2023-09-10T17:41:41.915Z" />
+</head>
+
+<body>
+  <main>
+    <article>
+      <section>
+        <div class="pw-post-title">
+          <h1>Understanding IAM Roles & IAM Policies in AWS</h1>
+        </div>
+
+        <p class="pw-post-body-paragraph">
+          After setting up IAM Users & Groups, the next step in securing your AWS environment is understanding IAM Roles and IAM Policies.
+          These components play a crucial role in managing permissions and securing AWS resources efficiently.
+        </p>
+
+        <h2>1. What Are IAM Roles?</h2>
+        <ul>
+          <li>✅ IAM Roles are similar to IAM users but are designed to be assumed by entities like AWS services, applications, or users for temporary access.</li>
+          <li>✅ They provide temporary credentials and can be used by AWS services like EC2, Lambda, and RDS to access resources securely.</li>
+          <li>✅ Unlike IAM users, roles do not have long-term credentials (passwords or access keys).</li>
+        </ul>
+
+        <h3>Use Cases of IAM Roles</h3>
+        <ul>
+          <li><strong>EC2 Instance Roles</strong>: Allows an EC2 instance to access S3 without storing credentials.</li>
+          <li><strong>Cross-Account Access</strong>: Enables users in one AWS account to access resources in another AWS account securely.</li>
+          <li><strong>Lambda Function Roles</strong>: Grants Lambda permissions to access other AWS services like S3 or DynamoDB.</li>
+        </ul>
+
+        <h3>How to Create an IAM Role?</h3>
+        <ol>
+          <li>Go to IAM Console and select <strong>Roles</strong>.</li>
+          <li>Click <strong>Create Role</strong>.</li>
+          <li>Choose the trusted entity (AWS service, another AWS account, or web identity provider).</li>
+          <li>Attach permissions by selecting an appropriate policy.</li>
+          <li>Name the role and create it.</li>
+        </ol>
+        <p class="pw-post-body-paragraph">
+          Once created, the role can be assumed by AWS services, users, or external applications.
+        </p>
+
+        <h2>2. What Are IAM Policies?</h2>
+        <ul>
+          <li>✅ IAM Policies are JSON-based documents that define permissions for users, groups, or roles.</li>
+          <li>✅ They control who can perform what actions on which resources under what conditions.</li>
+        </ul>
+
+        <h3>Types of IAM Policies</h3>
+        <ul>
+          <li><strong>AWS-Managed Policies</strong> – Predefined policies like <code>AmazonS3ReadOnlyAccess</code>.</li>
+          <li><strong>Customer-Managed Policies</strong> – Custom policies created by AWS users.</li>
+          <li><strong>Inline Policies</strong> – Embedded directly within a user, group, or role.</li>
+        </ul>
+
+        <h3>Example of an IAM Policy (JSON Format)</h3>
+        <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::my-bucket"
+    }
+  ]
+}</code></pre>
+        <p class="pw-post-body-paragraph">
+          This policy allows listing objects in a specific S3 bucket but does not grant other permissions.
+        </p>
+
+        <h2>3. Best Practices for IAM Roles & Policies</h2>
+        <ul>
+          <li>✅ <strong>Follow the Principle of Least Privilege</strong> – Only grant the necessary permissions.</li>
+          <li>✅ <strong>Use IAM Roles Instead of Hardcoded Credentials</strong> – Especially for EC2, Lambda, and applications.</li>
+          <li>✅ <strong>Regularly Audit IAM Policies</strong> – Use AWS IAM Access Analyzer to identify risky permissions.</li>
+          <li>✅ <strong>Enable MFA for Role Assumption</strong> – Adds an extra layer of security.</li>
+        </ul>
+
+        <h2>4. Next Steps</h2>
+        <ul>
+          <li>👉 Learn how to assume IAM Roles using the AWS CLI.</li>
+          <li>👉 Implement service control policies (SCPs) if managing multiple AWS accounts.</li>
+          <li>👉 Automate IAM policy enforcement with AWS Config.</li>
+        </ul>
+
+        <p class="pw-post-body-paragraph">
+          By mastering IAM Roles & IAM Policies, you enhance security, scalability, and flexibility within your AWS environment. 🚀
+        </p>
+      </section>
+    </article>
+  </main>
+</body>
+
+</html>
