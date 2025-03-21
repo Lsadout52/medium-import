@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta property="article:published_time" content="2022-09-16T17:41:41.915Z" />
+</head>
+
+<body>
+  <main>
+    <article>
+      <section>
+        <div class="pw-post-title">
+          <h1>AWS Private vs Public vs Elastic IP Explained</h1>
+        </div>
+
+        <p class="pw-post-body-paragraph">
+          When launching EC2 instances or configuring networking in AWS, you will encounter <strong>Private IPs</strong>, <strong>Public IPs</strong>, and <strong>Elastic IPs</strong>. Understanding how they work is essential for managing connectivity and security.
+        </p>
+
+        <h2>1. Private IP</h2>
+        <p class="pw-post-body-paragraph">
+          A Private IP is an internal address assigned to an instance inside a VPC. It allows communication between instances within the same network but cannot be accessed from the internet.
+        </p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+          <li>✅ Used for internal communication within AWS resources.</li>
+          <li>✅ Remains assigned to the instance throughout its lifecycle.</li>
+          <li>✅ Cannot be directly accessed from the internet.</li>
+          <li>✅ No extra cost.</li>
+        </ul>
+        <p><strong>Use Case:</strong></p>
+        <ul>
+          <li>Backend servers that communicate with databases but do not need internet access.</li>
+          <li>Inter-instance communication within the same VPC.</li>
+        </ul>
+
+        <h2>2. Public IP</h2>
+        <p class="pw-post-body-paragraph">
+          A Public IP is automatically assigned to an instance that is launched in a public subnet (unless disabled). This allows direct internet access.
+        </p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+          <li>✅ Assigned dynamically when an instance starts (unless an Elastic IP is attached).</li>
+          <li>✅ Changes if the instance is stopped and restarted.</li>
+          <li>✅ No extra cost but not persistent.</li>
+        </ul>
+        <p><strong>Use Case:</strong></p>
+        <ul>
+          <li>Web servers that need internet access.</li>
+          <li>Instances requiring temporary access from outside AWS.</li>
+        </ul>
+
+        <h2>3. Elastic IP</h2>
+        <p class="pw-post-body-paragraph">
+          An Elastic IP (EIP) is a static, public IP that you can manually assign to an instance. It stays the same, even if you stop/start the instance.
+        </p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+          <li>✅ A fixed public IP that remains with your AWS account.</li>
+          <li>✅ Can be reassigned between instances.</li>
+          <li>✅ AWS charges for unused Elastic IPs, so release them when not needed.</li>
+        </ul>
+        <p><strong>Use Case:</strong></p>
+        <ul>
+          <li>Highly available applications needing a consistent public IP.</li>
+          <li>VPN gateways and bastion hosts requiring static IPs.</li>
+          <li>Failover scenarios where the same IP needs to be moved across instances.</li>
+        </ul>
+
+        <h2>Final Thoughts</h2>
+        <ul>
+          <li>✅ Use <strong>Private IPs</strong> for internal communication between AWS resources.</li>
+          <li>✅ Use <strong>Public IPs</strong> for instances that need internet access but don’t require a fixed IP.</li>
+          <li>✅ Use <strong>Elastic IPs</strong> when a consistent public IP is needed for critical applications.</li>
+        </ul>
+        <p class="pw-post-body-paragraph">
+          By understanding these differences, you can optimize network design and reduce unnecessary AWS costs. 🚀
+        </p>
+
+      </section>
+    </article>
+  </main>
+</body>
+
+</html>
