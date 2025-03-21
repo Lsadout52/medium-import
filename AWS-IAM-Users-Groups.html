@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta property="article:published_time" content="2023-08-23T17:41:41.915Z" />
+</head>
+
+<body>
+  <main>
+    <article>
+      <section>
+        <div class="pw-post-title">
+          <h1>Getting Started with IAM Users & Groups in AWS</h1>
+        </div>
+
+        <p class="pw-post-body-paragraph">
+          👉 See my previous article related to <strong>Understanding IAM Roles & IAM Policies in AWS</strong>
+        </p>
+
+        <p class="pw-post-body-paragraph">
+          AWS Identity and Access Management (IAM) allows you to securely manage users, groups, and permissions within your AWS environment.
+          Instead of using your root account for daily operations, it’s best practice to create IAM users and assign them appropriate permissions using IAM groups.
+        </p>
+
+        <h2>1. What Are IAM Users & Groups?</h2>
+        <ul>
+          <li>✅ <strong>IAM Users</strong>: Individual identities with credentials to access AWS services.</li>
+          <li>✅ <strong>IAM Groups</strong>: Collections of users with shared permissions for easier management.</li>
+        </ul>
+        <p class="pw-post-body-paragraph">
+          Using IAM groups simplifies permission management by assigning policies at the group level instead of configuring each user separately.
+        </p>
+
+        <h2>2. Creating an IAM User</h2>
+        <ol>
+          <li>Navigate to IAM Console in AWS.</li>
+          <li>Click on <strong>Users > Add User</strong>.</li>
+          <li>Enter a username and choose the type of access:
+            <ul>
+              <li>AWS Management Console (for UI access)</li>
+              <li>Programmatic Access (for CLI/API access)</li>
+            </ul>
+          </li>
+          <li>Assign the user to an IAM Group or attach permissions directly.</li>
+          <li>Review settings and Create User.</li>
+        </ol>
+
+        <h2>3. Creating an IAM Group</h2>
+        <ol>
+          <li>In the IAM Console, go to <strong>Groups</strong> and click <strong>Create Group</strong>.</li>
+          <li>Enter a Group Name (e.g., Developers, Admins).</li>
+          <li>Attach necessary policies (e.g., <code>AdministratorAccess</code>, <code>ReadOnlyAccess</code>).</li>
+          <li>Add existing IAM Users to the group.</li>
+          <li>Click <strong>Create Group</strong>.</li>
+        </ol>
+        <p class="pw-post-body-paragraph">
+          Now, all users in the group inherit its permissions, making it easier to manage access across teams.
+        </p>
+
+        <h2>4. Best Practices for IAM Users & Groups</h2>
+        <ul>
+          <li>✅ <strong>Use Groups Instead of Individual User Permissions</strong> – Makes permission management scalable.</li>
+          <li>✅ <strong>Enable Multi-Factor Authentication (MFA)</strong> – Adds an extra layer of security.</li>
+          <li>✅ <strong>Follow the Principle of Least Privilege</strong> – Grant only the permissions required.</li>
+          <li>✅ <strong>Regularly Review IAM Policies</strong> – Ensure users only have access to what they need.</li>
+        </ul>
+
+        <h2>5. Next Steps</h2>
+        <ul>
+          <li>👉 If managing multiple accounts, consider using <strong>AWS Organizations</strong>.</li>
+          <li>👉 Use <strong>IAM Roles</strong> for temporary access instead of assigning direct permissions.</li>
+          <li>👉 Implement <strong>IAM Policies</strong> using JSON to fine-tune access control.</li>
+        </ul>
+
+        <p class="pw-post-body-paragraph">
+          By effectively using IAM users & groups, you can maintain a secure and scalable AWS environment while ensuring the right people have the right access. 🚀
+        </p>
+      </section>
+    </article>
+  </main>
+</body>
+
+</html>
