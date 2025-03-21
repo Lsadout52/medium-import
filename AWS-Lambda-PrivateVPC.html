@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2024-05-27T17:41:41.915Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>AWS Lambda in a Private VPC</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    AWS Lambda allows you to run functions without provisioning or managing servers, but when your Lambda function needs to access resources inside a private VPC, there are extra configurations to consider. By default, Lambda runs in an AWS-managed VPC and cannot directly access private resources such as RDS databases or internal APIs unless explicitly configured.
+                </p>
+
+                <h2>Why Run AWS Lambda in a Private VPC?</h2>
+                <ul>
+                    <li>✅ Securely access databases (e.g., Amazon RDS, ElastiCache) within a private subnet.</li>
+                    <li>✅ Interact with internal services without exposing them to the internet.</li>
+                    <li>✅ Keep network traffic within AWS for better security and compliance.</li>
+                </ul>
+
+                <h2>Step 1: Create a VPC with Private and Public Subnets</h2>
+                <p class="pw-post-body-paragraph">
+                    Before configuring Lambda, ensure your VPC setup includes:
+                </p>
+                <ul>
+                    <li><strong>Private Subnet</strong> – No direct internet access, used for databases and internal apps.</li>
+                    <li><strong>Public Subnet</strong> – Connected to an Internet Gateway for outbound access.</li>
+                    <li><strong>NAT Gateway</strong> – Allows instances in the private subnet to connect to the internet if needed.</li>
+                </ul>
+
+                <h2>Step 2: Configure AWS Lambda to Use the Private VPC</h2>
+                <ol>
+                    <li>Go to the AWS Lambda Console and select your function.</li>
+                    <li>Navigate to the <strong>Configuration</strong> tab and choose <strong>VPC</strong>.</li>
+                    <li>Select your VPC and add at least two private subnets for high availability.</li>
+                    <li>Choose a security group that allows necessary inbound/outbound access.</li>
+                    <li>Save the configuration—Lambda will now be deployed inside your VPC.</li>
+                </ol>
+
+                <h2>Step 3: Allow Internet Access for External Dependencies (Optional)</h2>
+                <p class="pw-post-body-paragraph">
+                    If your Lambda function needs to access external APIs, you must configure:
+                </p>
+                <ul>
+                    <li>A <strong>NAT Gateway</strong> in the public subnet to route outbound traffic.</li>
+                    <li>Update <strong>Route Tables</strong> to allow private subnets to use the NAT Gateway.</li>
+                </ul>
+                <p class="pw-post-body-paragraph">
+                    Without a NAT Gateway, your Lambda function will only be able to access internal AWS services (e.g., RDS, ElastiCache) but not the internet.
+                </p>
+
+                <h2>Common Issues & Fixes</h2>
+                <ul>
+                    <li>❌ <strong>Lambda timeout issues?</strong> Ensure the security group allows outbound traffic.</li>
+                    <li>❌ <strong>Cannot connect to an internal database?</strong> Verify the database’s security group allows Lambda’s private IP range.</li>
+                    <li>❌ <strong>No internet access from Lambda?</strong> Add a NAT Gateway and update routing tables.</li>
+                </ul>
+
+                <h2>Final Thoughts</h2>
+                <p class="pw-post-body-paragraph">
+                    Running AWS Lambda inside a private VPC enhances security and allows integration with internal AWS services. However, proper network setup and routing configurations are essential for smooth operation. By following these steps, you can ensure a secure and efficient Lambda deployment inside your VPC. 🚀
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
