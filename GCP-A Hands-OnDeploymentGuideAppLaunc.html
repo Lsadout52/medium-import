@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Launching Applications on Google Cloud: A Hands-On Deployment Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5 mb-5">
+    <h1 class="mb-3">Launching Applications on Google Cloud: A Hands-On Deployment Guide</h1>
+    <p class="text-muted">Published on October 15, 2024 at 17:41 UTC</p>
+
+    <p>
+      Google Cloud offers several powerful platforms to deploy and manage applications with ease — whether you're working with containers, serverless services, or full-fledged app platforms.
+      In this tutorial, you'll go through deploying a Python app to three major services on Google Cloud: App Engine, Google Kubernetes Engine (GKE), and Cloud Run.
+    </p>
+
+    <h2>What You’ll Learn</h2>
+    <ul>
+      <li>Clone and test a sample Python web app</li>
+      <li>Deploy the app to App Engine</li>
+      <li>Deploy to a Kubernetes cluster on GKE</li>
+      <li>Deploy a container to Cloud Run</li>
+    </ul>
+
+    <h2>Step 1: Clone and Preview a Sample App</h2>
+    <pre><code>
+mkdir gcp-deployments && cd gcp-deployments
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst.git
+cd training-data-analyst/courses/design-process/deploying-apps-to-gcp
+
+docker build -t flask-app .
+docker run --rm -p 8080:8080 flask-app
+    </code></pre>
+    <p>Then click "Web Preview" → "Preview on port 8080" to view the app.</p>
+
+    <h2>Step 2: Deploy to App Engine</h2>
+    <p>Create a file named <code>app.yaml</code>:</p>
+    <pre><code>runtime: python39</code></pre>
+
+    <p>Deploy the app:</p>
+    <pre><code>
+gcloud app create --region=us-central
+gcloud app deploy --version=v1 --quiet
+    </code></pre>
+
+    <p>After deployment, test versioning by updating <code>main.py</code> and running:</p>
+    <pre><code>gcloud app deploy --version=v2 --no-promote --quiet</code></pre>
+
+    <h2>Step 3: Deploy to Google Kubernetes Engine (GKE)</h2>
+    <p>1. Create a GKE cluster from the Cloud Console.</p>
+    <p>2. Connect to the cluster:</p>
+    <pre><code>
+gcloud container clusters get-credentials CLUSTER_NAME --zone=us-central1-a
+kubectl get nodes
+    </code></pre>
+
+    <p>3. Build and push the Docker image:</p>
+    <pre><code>
+gcloud builds submit --tag us-central1-docker.pkg.dev/$DEVSHELL_PROJECT_ID/devops-demo/k8s-image:v1
+    </code></pre>
+
+    <p>4. Create a Kubernetes deployment file <code>k8s-deploy.yaml</code>:</p>
+    <pre><code>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: us-central1-docker.pkg.dev/YOUR_PROJECT_ID/devops-demo/k8s-image:v1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-app
+  ports:
+  - port: 80
+    targetPort: 8080
+    </code></pre>
+
+    <p>5. Deploy to GKE:</p>
+    <pre><code>
+kubectl apply -f k8s-deploy.yaml
+kubectl get pods
+kubectl get services
+    </code></pre>
+    <p>Access the app via the external IP from the service.</p>
+
+    <h2>Step 4: Deploy to Cloud Run</h2>
+    <p>1. Build and push your image:</p>
+    <pre><code>
+gcloud builds submit --tag us-central1-docker.pkg.dev/$DEVSHELL_PROJECT_ID/devops-demo/cloud-run:v1
+    </code></pre>
+
+    <p>2. Deploy to Cloud Run:</p>
+    <pre><code>
+gcloud run deploy flask-cloudrun \
+  --image=us-central1-docker.pkg.dev/$DEVSHELL_PROJECT_ID/devops-demo/cloud-run:v1 \
+  --platform=managed \
+  --region=us-central1 \
+  --allow-unauthenticated
+    </code></pre>
+
+    <p>You’ll receive a public URL to access the deployed service.</p>
+
+    <h2>Conclusion</h2>
+    <p>
+      You’ve now deployed a Python app across three major Google Cloud services:
+    </p>
+    <ul>
+      <li>App Engine – great for serverless web apps</li>
+      <li>Google Kubernetes Engine – for orchestrating containers</li>
+      <li>Cloud Run – simple, scalable container deployment</li>
+    </ul>
+    <p>
+      Each solution offers flexibility depending on your needs — from rapid prototyping to scalable production apps.
+    </p>
+  </div>
+</body>
+</html>
