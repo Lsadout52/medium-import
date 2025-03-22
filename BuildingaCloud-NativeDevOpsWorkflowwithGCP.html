@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Building a Cloud-Native DevOps Workflow with GCP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Building a Cloud-Native DevOps Workflow with GCP</h1>
+        <p class="text-muted">Published on October 11, 2024 at 17:41 UTC</p>
+        
+        <p>
+            In this tutorial, you'll learn how to set up a basic DevOps pipeline in Google Cloud.
+            We'll walk through creating a Git repository, developing a Python web app, containerizing
+            it with Docker, managing images in Artifact Registry, and setting up automated builds
+            using Cloud Build triggers.
+        </p>
+
+        <h2>What You’ll Do</h2>
+        <ul>
+            <li>Set up a Git repository using Cloud Source Repositories</li>
+            <li>Build a lightweight Python web app</li>
+            <li>Create and push a Docker image</li>
+            <li>Store your image in Artifact Registry</li>
+            <li>Configure an automated build trigger</li>
+            <li>Test your CI/CD pipeline</li>
+        </ul>
+
+        <h2>Step 1: Set Up the Git Repository</h2>
+        <pre><code>
+mkdir devops-pipeline && cd devops-pipeline
+gcloud source repos create gcp-devops-demo
+gcloud source repos clone gcp-devops-demo
+cd gcp-devops-demo
+        </code></pre>
+
+        <h2>Step 2: Build a Simple Python Web App</h2>
+        <p>Create <code>main.py</code>:</p>
+        <pre><code>
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template("index.html", title="Welcome to GCP DevOps")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
+        </code></pre>
+
+        <p>Create <code>templates/index.html</code>:</p>
+        <pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;{{ title }}&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;h1&gt;{{ title }}&lt;/h1&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+
+        <p>Add <code>requirements.txt</code>:</p>
+        <pre><code>
+Flask>=2.0.0
+gunicorn
+        </code></pre>
+
+        <h2>Step 3: Containerize the App</h2>
+        <p>Create <code>Dockerfile</code>:</p>
+        <pre><code>
+FROM python:3.9-slim
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+ENV PORT=8080
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
+        </code></pre>
+
+        <h2>Step 4: Use Cloud Build and Artifact Registry</h2>
+        <pre><code>
+gcloud artifacts repositories create devops-artifacts \
+  --repository-format=docker \
+  --location=us-central1
+
+gcloud auth configure-docker us-central1-docker.pkg.dev
+
+gcloud builds submit \
+  --tag us-central1-docker.pkg.dev/$DEVSHELL_PROJECT_ID/devops-artifacts/devops-image:v1 .
+        </code></pre>
+
+        <h2>Step 5: Set Up Cloud Build Trigger</h2>
+        <ul>
+            <li>Go to Cloud Build → Triggers</li>
+            <li>Create a trigger for repository <code>gcp-devops-demo</code></li>
+            <li>Branch: <code>.*</code>, config: <code>Dockerfile</code></li>
+            <li>Image: <code>us-central1-docker.pkg.dev/$PROJECT_ID/devops-artifacts/devops-image:$COMMIT_SHA</code></li>
+        </ul>
+
+        <h2>Step 6: Test the Pipeline</h2>
+        <p>Update <code>main.py</code> to change the title, commit and push. Verify the Cloud Build trigger runs.</p>
+
+        <h2>Conclusion</h2>
+        <p>
+            You’ve now built a simple, cloud-native DevOps workflow on Google Cloud. From source control to
+            containerization and CI/CD automation, this pipeline gives you a reliable starting point
+            for modern software delivery in the cloud.
+        </p>
+    </div>
+</body>
+</html>
