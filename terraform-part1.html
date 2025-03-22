@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terraform Fundamentals on Google Cloud (Part 1 of 3)</title>
+</head>
+<body>
+    <h1>Terraform Fundamentals on Google Cloud (Part 1 of 3)</h1>
+    <p><strong>Published:</strong> October 13, 2024<br>
+    <strong>Estimated reading time: 8 minutes</strong></p>
+    <hr>
+    <h2>Overview</h2>
+    <p>This article introduces you to the basics of Terraform and how to get started using it with Google Cloud. Terraform lets you define infrastructure as code, and deploy repeatable, version-controlled resources across cloud environments.</p>
+    <p>In this part, you'll learn how to:</p>
+    <ul>
+        <li>Install and verify Terraform in Cloud Shell</li>
+        <li>Write your first Terraform configuration</li>
+        <li>Deploy a VM instance using Terraform</li>
+        <li>Understand how state and execution plans work</li>
+    </ul>
+
+    <h2>What is Terraform?</h2>
+    <p>Terraform is an open source tool by HashiCorp for managing infrastructure. You write declarative configuration files that describe what your infrastructure should look like, and Terraform builds it for you.</p>
+    <strong>Key Concepts:</strong>
+    <ul>
+        <li><strong>Infrastructure as Code (IaC):</strong> Define infrastructure in .tf files like you would code.</li>
+        <li><strong>Execution Plans:</strong> Terraform shows what will happen before making any changes.</li>
+        <li><strong>State Management:</strong> Terraform tracks resources it manages in a .tfstate file.</li>
+        <li><strong>Provider Plugins:</strong> Each cloud service (like Google Cloud) is managed through a specific provider.</li>
+    </ul>
+
+    <h2>Step 1: Launch Cloud Shell</h2>
+    <ul>
+        <li>Open the Google Cloud Console.</li>
+        <li>Click the terminal icon (top right) to activate Cloud Shell.</li>
+        <li>Wait for the shell to initialize. You’re now in a cloud-hosted Linux VM, pre-configured with Terraform.</li>
+    </ul>
+    <p><strong>Confirm Terraform is Installed</strong></p>
+    <pre><code>terraform version</code></pre>
+    <p>This should output the installed version. You’re ready to start!</p>
+
+    <h2>Step 2: Write Your First Terraform File</h2>
+    <p>In Cloud Shell:</p>
+    <ol>
+        <li>Create a new file:<br><code>touch instance.tf</code></li>
+        <li>Open the Cloud Shell Editor and paste:</li>
+    </ol>
+    <pre><code>resource "google_compute_instance" "terraform" {
+  project      = "PROJECT_ID"
+  name         = "terraform"
+  machine_type = "e2-medium"
+  zone         = "us-central1-a"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+}</code></pre>
+    <p>Replace <code>PROJECT_ID</code> and zone with values from your GCP project.</p>
+
+    <h2>Step 3: Initialize Terraform</h2>
+    <p>This downloads the required provider plugins.</p>
+    <pre><code>terraform init</code></pre>
+    <p>You should see confirmation that the Google provider has been initialized.</p>
+
+    <h2>Step 4: Preview the Changes</h2>
+    <p>Generate an execution plan without applying it:</p>
+    <pre><code>terraform plan</code></pre>
+    <p>You'll see a list of actions Terraform will perform, like creating the VM.</p>
+
+    <h2>Step 5: Apply the Configuration</h2>
+    <p>To deploy the VM:</p>
+    <pre><code>terraform apply</code></pre>
+    <p>Type <code>yes</code> when prompted.<br>
+    Terraform will create the instance based on your config.</p>
+
+    <h2>Step 6: Inspect Your Infrastructure</h2>
+    <p>After deployment, inspect the state:</p>
+    <pre><code>terraform show</code></pre>
+    <p>This gives details about the instance Terraform created.<br>
+    You can also go to the Google Cloud Console &gt; Compute Engine &gt; VM Instances to view it.</p>
+
+    <h2>Summary</h2>
+    <p>In under 10 minutes, you:</p>
+    <ul>
+        <li>Learned what Terraform is</li>
+        <li>Wrote and applied your first Terraform configuration</li>
+        <li>Deployed a VM on Google Cloud</li>
+        <li>Explored the execution plan and Terraform state</li>
+    </ul>
+
+    <p><strong>Coming next:</strong> Infrastructure as Code with Terraform (Part 2) — we'll cover variable files, modular design, and provisioning multiple resources.</p>
+
+    <h3>Next Steps</h3>
+    <ul>
+        <li><a href="https://registry.terraform.io">Terraform Registry</a></li>
+        <li><a href="https://cloud.google.com/docs/terraform">Terraform for GCP Docs</a></li>
+        <li><a href="https://cloud.google.com/training">Google Cloud Training</a></li>
+    </ul>
+    <p>Stay tuned for Part 2!</p>
+</body>
+</html>
