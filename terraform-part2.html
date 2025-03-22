@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infrastructure as Code with Terraform (Part 2 of 3)</title>
+</head>
+<body>
+    <article>
+        <h1>Infrastructure as Code with Terraform (Part 2 of 3)</h1>
+        <p><strong>Published:</strong> October 15, 2024</p>
+        <p><strong>Estimated reading time:</strong> 9 minutes</p>
+        <hr>
+        <h2>Overview</h2>
+        <p>This article is the second in our three-part series on using Terraform with Google Cloud. In Part 1, you learned Terraform basics and deployed your first VM. In this part, we'll go deeper into infrastructure as code (IaC), working with multiple resources, understanding dependencies, and provisioning infrastructure efficiently.</p>
+        <p>You will learn how to:</p>
+        <ul>
+            <li>Write modular Terraform configuration files</li>
+            <li>Create and change multiple GCP resources</li>
+            <li>Manage resource dependencies</li>
+            <li>Use provisioners to configure deployed infrastructure</li>
+        </ul>
+
+        <h2>What is Infrastructure as Code (IaC)?</h2>
+        <p>Infrastructure as Code (IaC) means writing and managing your infrastructure using code instead of manual steps in a GUI. This makes your deployments repeatable, auditable, and version-controlled.</p>
+        <p>Terraform's language, HCL (HashiCorp Configuration Language), lets you describe your infrastructure clearly and declaratively.</p>
+
+        <h2>Step 1: Define Resources in Code</h2>
+        <p>In your Cloud Shell, start by creating a Terraform config file:</p>
+        <pre><code>touch main.tf</code></pre>
+        <p>Paste the following content into <code>main.tf</code>:</p>
+        <pre><code>terraform {{
+  required_providers {{
+    google = {{
+      source  = "hashicorp/google"
+      version = "4.77.0"
+    }}
+  }}
+}}
+
+provider "google" {{
+  project = "PROJECT_ID"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}}
+
+resource "google_compute_network" "vpc_network" {{
+  name = "terraform-network"
+}}</code></pre>
+        <p>Replace <code>PROJECT_ID</code> with your real project ID. Then initialize the project:</p>
+        <pre><code>terraform init</code></pre>
+
+        <h2>Step 2: Add a Compute Instance</h2>
+        <pre><code>resource "google_compute_instance" "vm_instance" {{
+  name         = "terraform-instance"
+  machine_type = "e2-micro"
+
+  boot_disk {{
+    initialize_params {{
+      image = "debian-cloud/debian-11"
+    }}
+  }}
+
+  network_interface {{
+    network = google_compute_network.vpc_network.name
+    access_config {{}}
+  }}
+}}</code></pre>
+        <p>Then deploy:</p>
+        <pre><code>terraform apply</code></pre>
+        <p>Type <code>yes</code> to confirm.</p>
+
+        <h2>Step 3: Update Infrastructure</h2>
+        <p>Change your instance by adding tags:</p>
+        <pre><code>tags = ["web", "dev"]</code></pre>
+        <p>Then reapply:</p>
+        <pre><code>terraform apply</code></pre>
+
+        <p>To trigger a destructive change, try changing the boot image to:</p>
+        <pre><code>image = "cos-cloud/cos-stable"</code></pre>
+
+        <h2>Step 4: Use Dependencies</h2>
+        <p>Add a static IP resource:</p>
+        <pre><code>resource "google_compute_address" "vm_static_ip" {{
+  name = "terraform-static-ip"
+}}</code></pre>
+        <p>Attach it to your instance:</p>
+        <pre><code>network_interface {{
+  network = google_compute_network.vpc_network.self_link
+  access_config {{
+    nat_ip = google_compute_address.vm_static_ip.address
+  }}
+}}</code></pre>
+
+        <p>Run:</p>
+        <pre><code>terraform apply</code></pre>
+
+        <h2>Step 5: Explicit Dependencies</h2>
+        <pre><code>resource "google_storage_bucket" "example_bucket" {{
+  name     = "my-unique-bucket-name"
+  location = "US"
+}}
+
+resource "google_compute_instance" "another_instance" {{
+  depends_on = [google_storage_bucket.example_bucket]
+  name       = "terraform-instance-2"
+  machine_type = "e2-micro"
+  # boot_disk and network_interface configs here...
+}}</code></pre>
+
+        <h2>Step 6: Use Provisioners</h2>
+        <pre><code>provisioner "local-exec" {{
+  command = "echo ${{self.name}}: ${{self.network_interface[0].access_config[0].nat_ip}} >> ip_address.txt"
+}}</code></pre>
+
+        <p>To trigger this provisioner:</p>
+        <pre><code>terraform taint google_compute_instance.vm_instance
+terraform apply</code></pre>
+
+        <p>Check the generated <code>ip_address.txt</code> file to confirm.</p>
+
+        <h2>Summary</h2>
+        <p>In this second part, you:</p>
+        <ul>
+            <li>Wrote Terraform configurations for multiple resources</li>
+            <li>Learned how Terraform handles updates and deletions</li>
+            <li>Explored both implicit and explicit resource dependencies</li>
+            <li>Used provisioners to generate outputs or run scripts</li>
+        </ul>
+        <p>In the next and final part, we’ll cover:</p>
+        <ul>
+            <li>Modules and reusability</li>
+            <li>Remote backends and shared state</li>
+            <li>CI/CD integration for Terraform workflows</li>
+        </ul>
+
+        <h2>Next Steps</h2>
+        <ul>
+            <li><a href="https://developer.hashicorp.com/terraform/language/modules">Terraform Modules Guide</a></li>
+            <li><a href="https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax">Provisioners in Terraform</a></li>
+            <li><a href="https://registry.terraform.io/providers/hashicorp/google/latest/docs">Google Cloud Terraform Provider</a></li>
+        </ul>
+        <p><em>Stay tuned for Part 3!</em></p>
+    </article>
+</body>
+</html>
