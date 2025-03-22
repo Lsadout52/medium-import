@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infrastructure as Code with Terraform (Part 3 of 3)</title>
+</head>
+<body>
+    <article>
+        <h1>Infrastructure as Code with Terraform (Part 3 of 3)</h1>
+        <p><strong>Published:</strong> October 17, 2024</p>
+        <p><em>Estimated reading time: 5 minutes</em></p>
+
+        <h2>Overview</h2>
+        <p>This final article in our Terraform on Google Cloud series focuses on making your infrastructure code modular, scalable, and collaborative.</p>
+        <p>You’ll learn how to:</p>
+        <ul>
+            <li>Organize Terraform code into reusable modules</li>
+            <li>Store and share Terraform state with remote backends</li>
+            <li>Set up automation for Terraform workflows</li>
+        </ul>
+
+        <h2>Step 1: Modularize Your Code</h2>
+        <p>Instead of writing all resources in one file, break them into modules. Modules make your configuration reusable and easier to maintain.</p>
+        <p><strong>Example directory structure:</strong></p>
+        <pre><code>project-root/
+│
+├── main.tf
+├── variables.tf
+├── outputs.tf
+└── modules/
+    └── compute_instance/
+        ├── main.tf
+        ├── variables.tf
+        └── outputs.tf
+</code></pre>
+
+        <p><strong>Use a module:</strong></p>
+        <pre><code>module "vm_instance" {{
+  source       = "./modules/compute_instance"
+  instance_name = "terraform-instance"
+  machine_type  = "e2-medium"
+  network       = google_compute_network.vpc_network.self_link
+}}
+</code></pre>
+        <p>This structure scales across environments (dev, staging, prod).</p>
+
+        <h2>Step 2: Use Remote Backends</h2>
+        <p>By default, Terraform saves state locally. For teams, store state in a shared location like Google Cloud Storage (GCS).</p>
+        <p><strong>Configure backend in main.tf:</strong></p>
+        <pre><code>terraform {{
+  backend "gcs" {{
+    bucket  = "my-terraform-state-bucket"
+    prefix  = "terraform/state"
+  }}
+}}
+</code></pre>
+        <p>Make sure the GCS bucket exists before running <code>terraform init</code>.</p>
+
+        <h2>Step 3: Automate with CI/CD</h2>
+        <p>To integrate Terraform with automation:</p>
+        <ul>
+            <li>Use Cloud Build, GitHub Actions, or GitLab CI</li>
+            <li>On <code>git push</code>, run <code>terraform fmt</code>, <code>plan</code>, and <code>apply</code></li>
+        </ul>
+
+        <p><strong>Example CI job in GitHub Actions:</strong></p>
+        <pre><code>jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Plan
+        run: terraform plan
+</code></pre>
+        <p>You can also use <code>terraform apply -auto-approve</code> in production with proper checks.</p>
+
+        <h2>Final Notes</h2>
+        <p>In this series, you:</p>
+        <ul>
+            <li>✅ Understood Terraform basics and deployed your first VM</li>
+            <li>✅ Applied infrastructure changes and explored dependencies</li>
+            <li>✅ Modularized configs, used remote state, and set up automation</li>
+        </ul>
+        <p>With these skills, you're ready to manage real-world infrastructure confidently with Terraform on Google Cloud.</p>
+
+        <h3>Next Resources:</h3>
+        <ul>
+            <li><a href="https://developer.hashicorp.com/terraform/cli">Terraform CLI Docs</a></li>
+            <li><a href="https://developer.hashicorp.com/terraform/language/settings/backends/gcs">Remote Backends</a></li>
+            <li><a href="https://developer.hashicorp.com/terraform/tutorials/automation/github-actions">CI/CD with Terraform</a></li>
+        </ul>
+        <p>Thank you for following this series! 💻☁️</p>
+    </article>
+</body>
+</html>
