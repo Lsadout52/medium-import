@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GCP Challenge Lab: Building a Dev Environment for WordPress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container my-5">
+    <h1>GCP Challenge Lab: Building a Dev Environment for WordPress</h1>
+    <p class="text-muted">Published on October 20, 2024 at 17:41 UTC</p>
+
+    <p>This challenge lab guides you through setting up a full development environment for a WordPress application on Google Cloud. You’ll configure VPCs, a bastion host, a Cloud SQL instance, and a Kubernetes cluster — all using real GCP tools and services.</p>
+
+    <h2>Scenario</h2>
+    <p>You are a cloud engineer at Jooli Inc. tasked with helping the Griffin team build their WordPress-based dev infrastructure in Google Cloud. Follow the company's naming conventions and resource size recommendations.</p>
+
+    <h2>Task 1: Create Development VPC</h2>
+    <ul>
+      <li>VPC Name: <code>griffin-dev-vpc</code></li>
+      <li>Subnets:
+        <ul>
+          <li><code>griffin-dev-wp</code> — 192.168.16.0/20</li>
+          <li><code>griffin-dev-mgmt</code> — 192.168.32.0/20</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>Task 2: Create Production VPC</h2>
+    <ul>
+      <li>VPC Name: <code>griffin-prod-vpc</code></li>
+      <li>Subnets:
+        <ul>
+          <li><code>griffin-prod-wp</code> — 192.168.48.0/20</li>
+          <li><code>griffin-prod-mgmt</code> — 192.168.64.0/20</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>Task 3: Create Bastion Host</h2>
+    <ul>
+      <li>Name: <code>griffin-bastion</code></li>
+      <li>Machine type: <code>e2-medium</code></li>
+      <li>Network interfaces in:
+        <ul>
+          <li><code>griffin-dev-mgmt</code></li>
+          <li><code>griffin-prod-mgmt</code></li>
+        </ul>
+      </li>
+    </ul>
+    <p>Ensure SSH access is enabled and firewall rules allow TCP port 22.</p>
+
+    <h2>Task 4: Set Up Cloud SQL</h2>
+    <ul>
+      <li>Instance Name: <code>griffin-dev-db</code></li>
+      <li>Database Engine: MySQL</li>
+      <li>SQL Commands:</li>
+    </ul>
+    <pre><code>
+CREATE DATABASE wordpress;
+CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
+FLUSH PRIVILEGES;
+    </code></pre>
+
+    <h2>Task 5: Create Kubernetes Cluster</h2>
+    <ul>
+      <li>Cluster Name: <code>griffin-dev</code></li>
+      <li>Zone: <code>ZONE</code></li>
+      <li>Nodes: 2 × <code>e2-standard-4</code></li>
+      <li>Network/Subnet: <code>griffin-dev-vpc</code> / <code>griffin-dev-wp</code></li>
+    </ul>
+
+    <h2>Task 6: Prepare the Kubernetes Cluster</h2>
+    <p>Copy environment files:</p>
+    <pre><code>
+gsutil cp -r gs://cloud-training/gsp321/wp-k8s .
+cd wp-k8s
+    </code></pre>
+    <p>Create a secret from the Cloud SQL service account:</p>
+    <pre><code>
+gcloud iam service-accounts keys create key.json \
+  --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+
+kubectl create secret generic cloudsql-instance-credentials \
+  --from-file key.json
+    </code></pre>
+    <p>Update <code>wp-env.yaml</code> with:</p>
+    <ul>
+      <li>DB user: <code>wp_user</code></li>
+      <li>Password: <code>stormwind_rules</code></li>
+    </ul>
+
+    <h2>Task 7: Deploy WordPress</h2>
+    <p>Update <code>wp-deployment.yaml</code> with your SQL instance connection name, then deploy:</p>
+    <pre><code>
+kubectl apply -f wp-env.yaml
+kubectl apply -f wp-deployment.yaml
+kubectl apply -f wp-service.yaml
+    </code></pre>
+    <p>After the service is deployed, open the WordPress installer via the Load Balancer's external IP.</p>
+
+    <h2>Task 8: Enable Monitoring</h2>
+    <p>Create an uptime check for the WordPress service using its external IP.</p>
+
+    <h2>Task 9: Grant Access to an Engineer</h2>
+    <p>Run the following to grant project access:</p>
+    <pre><code>
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+  --member="user:SECOND_USER_EMAIL" \
+  --role="roles/editor"
+    </code></pre>
+
+    <h2>Conclusion</h2>
+    <p>You’ve successfully built a development environment for WordPress on Google Cloud. You've applied networking, IAM, GKE, and monitoring concepts in a real-world scenario. Great work!</p>
+  </div>
+</body>
+</html>
